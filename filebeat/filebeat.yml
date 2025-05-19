@@ -1,0 +1,42 @@
+filebeat.inputs:
+- type: log
+  enabled: true
+  paths:
+    - /Applications/dev-sandbox/projects/microservices-template/logs/microservice-template*.log
+    
+filebeat.config.modules:
+  path: ${path.config}/modules.d/*.yml
+  reload.enabled: false
+
+  setup.template.settings:
+  index.number_of_shards: 3
+
+fields:
+  env: prod
+
+setup.dashboards.enabled: true
+
+setup.kibana:
+  host: "localhost:5601"
+
+output.logstash:
+  hosts: ["localhost:5044"]
+
+processors:
+  - add_host_metadata: ~
+  - add_cloud_metadata: ~
+
+#-------------------------- Elasticsearch output ------------------------------
+#output.elasticsearch:
+  # Array of hosts to connect to.
+  #hosts: ["localhost:9200"]
+
+  # Enabled ilm (beta) to use index lifecycle management instead daily indices.
+  #ilm.enabled: false
+
+  # Optional protocol and basic auth credentials.
+  #protocol: "https"
+  #username: "elastic"
+  #password: "changeme"
+
+logging.level: info #The default log level is info.
